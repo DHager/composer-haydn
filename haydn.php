@@ -16,7 +16,7 @@
 
 define("SRC_CONF", "composer.json");
 define("MOD_CONF", "haydn.json");
-
+define("SAME_BRANCH", "@samebranch");
 
 function loadJson($path){
     if(!is_readable($path)){
@@ -66,17 +66,27 @@ function jsonErrorMessage($code){
     return "UNKNOWN";
 }
 
+function getCurrentBranch(){
+    $output = array();
+    exec('git symbolic-ref --short HEAD',$output);
+    return trim(join(" ",$output));
+}
+
 /**
  * @param object $base Decoded composer.json
  * @param object $modConf Decoded haydn.json
  */
 function override($base,$modConf){
+    $currBranch = getCurrentBranch();
     /**
      * Add/replace packages with alternate versions, unless the version is blank in
      * which case the package is removed.
      */
     if(isset($modConf->{'override-require'}) && isset($base->{'require'})){
         foreach($modConf->{'override-require'} as $packageName => $version){
+            if($version == SAME_BRANCH){
+                $version = "dev-$currBranch";
+            }
             if($version != ""){
                 $base->{'require'}->{$packageName} = $version;
             }else{
