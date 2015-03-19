@@ -130,10 +130,9 @@ function override($base,$modConf){
 
 function writeTemp($conf){
     $tempStr = json_encode($conf,JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    $tempStr = str_replace('"_empty_"','""',$tempStr); // Shitty workaround for issue #2
     $tempPath = tempnam(sys_get_temp_dir(),"haydn_");
-    $fh = fopen($tempPath, "w");
-    fwrite($fh,$tempStr);
-    fclose($fh);
+    file_put_contents($tempPath,$tempStr);
     return $tempPath;
 }
 
