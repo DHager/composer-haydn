@@ -1,0 +1,13 @@
+{
+    "_readme": [
+      "This is NOT an official composer feature! This is the config file for a",
+      "third-party tool called Haydn. It defines which repositories and",
+      "packages to override for a developer working on their own machine."
+    ],
+    "override-require": {
+    },
+    "override-require-dev": {
+    },
+    "override-repositories": {
+    }
+}
